@@ -9,7 +9,7 @@ const ProductListItem = props => {
       <CheckBox
         containerStyle={styles.checkBox}
         checked={!props.active}
-        onPress={() => props.handleCheckBoxPress(props.id)}
+        onPress={() => props.handleCheckBoxPress(props.id, props.active)}
       />
       <Text
         style={

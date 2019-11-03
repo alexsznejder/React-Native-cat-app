@@ -10,17 +10,6 @@ import InformationsScreen from "../screens/InformationsScreen";
 import LastActivitiesScreen from "../screens/LastActivitiesScreen";
 import SensorsScreen from "../screens/SensorsScreen";
 import ShoppingListScreen from "../screens/ShoppingListScreen";
-import AddEventScreen from "../screens/AddEventScreen";
-
-const CalendarNavigation = createStackNavigator(
-  {
-    Calendar: CalendarScreen,
-    AddEvent: AddEventScreen
-  },
-  {
-    headerMode: "none"
-  }
-);
 
 const TabsNavigation = createMaterialBottomTabNavigator(
   {
@@ -33,7 +22,7 @@ const TabsNavigation = createMaterialBottomTabNavigator(
       }
     },
     Calendar: {
-      screen: CalendarNavigation,
+      screen: CalendarScreen,
       navigationOptions: {
         tabBarIcon: tabInfo => {
           return <AntDesign name="calendar" size={25} color="white" />;

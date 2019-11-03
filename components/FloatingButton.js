@@ -22,6 +22,7 @@ const styles = StyleSheet.create({
     elevation: 3,
     justifyContent: "center",
     alignItems: "center"
+    // alignSelf: "flex-end"
   }
 });
 

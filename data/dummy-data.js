@@ -6,11 +6,6 @@ export const CATS = [
   new Cat(2, "Goya", "female", "2018-05-08", "other", true, 5.2, null)
 ];
 
-export const PRODUCTS = [
-  new Product(1, 1, "żwirek"),
-  new Product(2, 1, "mokra karma")
-];
-
 export const SENSORS = [
   {
     id: 1,

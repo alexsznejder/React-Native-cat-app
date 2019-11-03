@@ -21,8 +21,8 @@ const styles = StyleSheet.create({
     // overflow: "hidden"
   },
   buttonText: {
-    textTransform: "uppercase"
-    // fontWeight: "bold"
+    textTransform: "uppercase",
+    fontWeight: "bold"
   }
 });
 
