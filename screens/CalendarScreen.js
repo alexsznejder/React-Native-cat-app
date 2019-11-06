@@ -81,7 +81,8 @@ const styles = StyleSheet.create({
   },
   eventsContainer: {
     marginTop: 10,
-    backgroundColor: "white"
+    backgroundColor: "white",
+    height: "100%"
   },
   todayText: {
     margin: 10

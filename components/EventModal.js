@@ -149,13 +149,13 @@ const EventModal = props => {
 
 const styles = StyleSheet.create({
   modal: {
-    flex: 1,
-    justifyContent: "center"
+    flex: 1
   },
   modalContainer: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center"
+    justifyContent: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.5)"
   },
   innercontainer: {
     paddingVertical: 15,

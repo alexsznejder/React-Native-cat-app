@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     paddingHorizontal: 20,
-    height: 50
+    height: 60
   },
   dot: {
     width: 10,
@@ -58,9 +58,11 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     flex: 1,
+    height: "100%",
+    alignItems: "center",
     flexDirection: "row",
     justifyContent: "space-between",
-    borderBottomWidth: 1,
+    borderBottomWidth: 0.5,
     borderColor: "lightgray"
   },
   text: {},

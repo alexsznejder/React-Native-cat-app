@@ -1,4 +1,9 @@
-import { ADD_SELECTED_DATE, GET_EVENTS, ADD_EVENT } from "../actions/dates";
+import {
+  ADD_SELECTED_DATE,
+  GET_EVENTS,
+  ADD_EVENT,
+  DELETE_EVENT
+} from "../actions/dates";
 import Event from "../../models/Event";
 
 const inicialState = {
@@ -69,7 +74,15 @@ const datesReducer = (state = inicialState, action) => {
         events: state.events.concat(newEvent),
         markedDates: newMarkedDates
       };
-
+    case DELETE_EVENT:
+      const newEvents = state.events.filter(
+        event => event.id !== action.payload
+      );
+      //markedDates do zmiany
+      return {
+        ...state,
+        events: newEvents
+      };
     default:
       return state;
   }

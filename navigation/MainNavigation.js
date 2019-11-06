@@ -13,11 +13,11 @@ import ShoppingListScreen from "../screens/ShoppingListScreen";
 
 const TabsNavigation = createMaterialBottomTabNavigator(
   {
-    LastActivities: {
-      screen: LastActivitiesScreen,
+    Informations: {
+      screen: InformationsScreen,
       navigationOptions: {
         tabBarIcon: tabInfo => {
-          return <AntDesign name="bars" size={25} color="white" />;
+          return <MaterialCommunityIcons name="paw" size={25} color="white" />;
         }
       }
     },
@@ -26,14 +26,6 @@ const TabsNavigation = createMaterialBottomTabNavigator(
       navigationOptions: {
         tabBarIcon: tabInfo => {
           return <AntDesign name="calendar" size={25} color="white" />;
-        }
-      }
-    },
-    Informations: {
-      screen: InformationsScreen,
-      navigationOptions: {
-        tabBarIcon: tabInfo => {
-          return <MaterialCommunityIcons name="paw" size={25} color="white" />;
         }
       }
     },

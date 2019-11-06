@@ -3,6 +3,8 @@ import Event from "../../models/Event";
 export const ADD_SELECTED_DATE = "ADD_SELECTED_DATE";
 export const GET_EVENTS = "GET_EVENTS";
 export const ADD_EVENT = "ADD_EVENT";
+export const DELETE_EVENT = "DELETE_EVENT";
+export const EDIT_EVENT = "EDIT_EVENT";
 
 export const fetchEvents = () => {
   return async dispatch => {
@@ -94,6 +96,22 @@ export const addEvent = (
         localization,
         description
       }
+    });
+  };
+};
+
+export const deleteEvent = id => {
+  return async dispatch => {
+    await fetch(
+      `https://cat-owner-helper.firebaseio.com/dates/events/${id}.json`,
+      {
+        method: "DELETE"
+      }
+    );
+
+    dispatch({
+      type: DELETE_EVENT,
+      payload: id
     });
   };
 };
