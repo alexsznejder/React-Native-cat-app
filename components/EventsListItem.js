@@ -1,5 +1,5 @@
 import React from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
 
 const EventsListItem = props => {
   const currentHour = new Date().getHours();
@@ -20,19 +20,30 @@ const EventsListItem = props => {
   };
 
   return (
-    <View style={styles.container}>
-      <View
-        style={
-          active()
-            ? { ...styles.active, ...styles.dot }
-            : { ...styles.inactive, ...styles.dot }
-        }
-      ></View>
-      <View style={styles.textContainer}>
-        <Text style={styles.text}>{props.title}</Text>
-        <Text style={styles.time}>{props.time}</Text>
+    <TouchableOpacity
+      onPress={() => {
+        props.navigation.navigate({
+          routeName: "AddEvent",
+          params: {
+            selectedEvent: props.event
+          }
+        });
+      }}
+    >
+      <View style={styles.container}>
+        <View
+          style={
+            active()
+              ? { ...styles.active, ...styles.dot }
+              : { ...styles.inactive, ...styles.dot }
+          }
+        ></View>
+        <View style={styles.textContainer}>
+          <Text style={styles.text}>{props.title}</Text>
+          <Text style={styles.time}>{props.time}</Text>
+        </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 };
 

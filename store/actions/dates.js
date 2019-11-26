@@ -5,6 +5,7 @@ export const GET_EVENTS = "GET_EVENTS";
 export const ADD_EVENT = "ADD_EVENT";
 export const DELETE_EVENT = "DELETE_EVENT";
 export const EDIT_EVENT = "EDIT_EVENT";
+export const SET_SELECTED_EVENT_ID = "SET_SELECTED_EVENT_ID";
 
 export const fetchEvents = () => {
   return async dispatch => {
@@ -21,6 +22,7 @@ export const fetchEvents = () => {
       loadedEvents.push(
         new Event(
           key,
+          resData[key].catId,
           resData[key].date,
           resData[key].title,
           resData[key].allDay,
@@ -57,7 +59,15 @@ export const addSelectedDate = dateString => {
   };
 };
 
+export const setSelectedEventId = eventId => {
+  return {
+    type: SET_SELECTED_EVENT_ID,
+    payload: eventId
+  };
+};
+
 export const addEvent = (
+  catId,
   date,
   title,
   allDaySwitch,
@@ -74,6 +84,7 @@ export const addEvent = (
           "Content-Type": "application/json"
         },
         body: JSON.stringify({
+          catId,
           date,
           title,
           allDaySwitch,
@@ -89,7 +100,49 @@ export const addEvent = (
       type: ADD_EVENT,
       eventData: {
         id: resData.name,
+        catId,
         date,
+        title,
+        allDaySwitch,
+        time,
+        localization,
+        description
+      }
+    });
+  };
+};
+
+export const editEvent = (
+  eventId,
+  title,
+  allDaySwitch,
+  time,
+  localization,
+  description
+) => {
+  console.log(eventId);
+  return async dispatch => {
+    await fetch(
+      `https://cat-owner-helper.firebaseio.com/dates/events/${eventId}.json`,
+      {
+        method: "PATCH",
+        header: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          title,
+          allDaySwitch,
+          time,
+          localization,
+          description
+        })
+      }
+    );
+
+    dispatch({
+      type: EDIT_EVENT,
+      payload: {
+        id: eventId,
         title,
         allDaySwitch,
         time,

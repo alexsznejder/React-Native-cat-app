@@ -2,7 +2,9 @@ import {
   ADD_SELECTED_DATE,
   GET_EVENTS,
   ADD_EVENT,
-  DELETE_EVENT
+  DELETE_EVENT,
+  EDIT_EVENT,
+  SET_SELECTED_EVENT_ID
 } from "../actions/dates";
 import Event from "../../models/Event";
 
@@ -10,7 +12,8 @@ const inicialState = {
   selectedDay: "",
   markedDates: {},
   events: [],
-  selectedDayEvents: []
+  selectedDayEvents: [],
+  selectedEventId: undefined
 };
 
 const datesReducer = (state = inicialState, action) => {
@@ -57,6 +60,7 @@ const datesReducer = (state = inicialState, action) => {
     case ADD_EVENT:
       const newEvent = new Event(
         action.eventData.id,
+        action.eventData.catId,
         action.eventData.date,
         action.eventData.title,
         action.eventData.allDay,
@@ -74,6 +78,27 @@ const datesReducer = (state = inicialState, action) => {
         events: state.events.concat(newEvent),
         markedDates: newMarkedDates
       };
+    case EDIT_EVENT:
+      const idx = state.events.findIndex(
+        event => event.id === action.payload.id
+      );
+      const eventsList = state.events;
+      eventsList[idx].title = action.payload.title;
+      eventsList[idx].allDaySwitch = action.payload.allDaySwitch;
+      eventsList[idx].time = action.payload.time;
+      eventsList[idx].localization = action.payload.localization;
+      eventsList[idx].description = action.payload.description;
+      return {
+        ...state,
+        events: eventsList
+      };
+
+    case SET_SELECTED_EVENT_ID:
+      return {
+        ...state,
+        selectedEventId: action.payload
+      };
+
     case DELETE_EVENT:
       const newEvents = state.events.filter(
         event => event.id !== action.payload

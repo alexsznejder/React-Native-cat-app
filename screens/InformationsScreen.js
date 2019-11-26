@@ -1,88 +1,118 @@
-import React from "react";
-import { View, Text, StyleSheet, ScrollView } from "react-native";
+import React, { useEffect } from "react";
+import {
+  View,
+  Text,
+  StyleSheet,
+  ScrollView,
+  TouchableOpacity
+} from "react-native";
 import { connect } from "react-redux";
-import { Foundation } from "@expo/vector-icons";
+import { Foundation, Feather, FontAwesome } from "@expo/vector-icons";
 import CatDataItem from "../components/CatDataItem";
+import moment from "moment";
+import BackArrow from "../components/BackArrow";
+import { deleteCat } from "../store/actions/cats";
 
 const numOfYears = date => {
-  const birthDate = new Date(date);
-  let actualDate = new Date();
-
-  const utc1 = Date.UTC(
-    actualDate.getFullYear(),
-    actualDate.getMonth(),
-    actualDate.getDate()
-  );
-  const utc2 = Date.UTC(
-    birthDate.getFullYear(),
-    birthDate.getMonth(),
-    birthDate.getDate()
-  );
-
-  let years = ((utc1 - utc2) / 1000 / 60 / 60 / 24 / 365).toFixed(1);
-
-  if (years < 1) {
-    return years;
-  } else {
-    if (years[years.length - 1] < 5) {
-      years = Number(years).toFixed();
-      return years;
-    } else {
-      years = years.substr(0, years.length - 1) + 5;
-      return years;
-    }
-  }
+  const current = moment(new Date());
+  const birthday = moment(date, "DD-MM-YYYY");
+  return current.diff(birthday, "years");
 };
 
 const InformationsScreen = props => {
   const catId = props.cats.selectedCatId;
   const selectedCat = props.cats.catsList.find(cat => cat.id === catId);
-  const years = numOfYears(selectedCat.birthDate);
+  const years = numOfYears(selectedCat.birthday);
+
+  useEffect(() => {
+    props.navigation.setParams({
+      id: catId,
+      deleteCat: props.deleteCat,
+      selectedCat: selectedCat
+    });
+  }, []);
 
   return (
-    <ScrollView>
-      <View style={styles.screen}>
-        <View style={styles.image}></View>
-        <View style={styles.header}>
-          <View style={styles.nameContainer}>
-            <Text style={styles.name}>{selectedCat.name}</Text>
-            {selectedCat.sex === "male" ? (
-              <Foundation name="male-symbol" color="black" size={28} />
-            ) : (
-              <Foundation name="female-symbol" color="black" size={28} />
-            )}
-          </View>
-          <Text style={styles.years}>{years} years old</Text>
-        </View>
-        <View style={styles.tileContainer}>
-          <CatDataItem title="Birthday" data={selectedCat.birthDate} />
-          <CatDataItem title="Breed" data={selectedCat.breed} />
-          <CatDataItem title="Sterilised" data={selectedCat.sterilised} />
-          <CatDataItem title="Weight" data={selectedCat.weight} />
-        </View>
+    <View style={styles.screen}>
+      <View style={styles.image}>
+        <FontAwesome name="camera" size={50} color="lightgray" />
       </View>
-    </ScrollView>
+      <View style={styles.header}>
+        <View style={styles.nameContainer}>
+          <Text style={styles.name}>{selectedCat.name}</Text>
+          {selectedCat.sex === "male" ? (
+            <Foundation name="male-symbol" color="black" size={28} />
+          ) : (
+            <Foundation name="female-symbol" color="black" size={28} />
+          )}
+        </View>
+        <Text style={styles.years}>{years} years old</Text>
+      </View>
+      <View style={styles.tileContainer}>
+        <CatDataItem title="Birthday" data={selectedCat.birthday} />
+        <CatDataItem title="Breed" data={selectedCat.breed} />
+        <CatDataItem title="Sterilised" data={selectedCat.sterilised} />
+        <CatDataItem title="Weight" data={selectedCat.weight} />
+      </View>
+    </View>
   );
 };
+
+InformationsScreen.navigationOptions = props => ({
+  headerLeft: <BackArrow navigation={props.navigation} />,
+  headerRight: (
+    <>
+      <TouchableOpacity
+        onPress={() => {
+          const { selectedCat } = props.navigation.state.params;
+          props.navigation.navigate({
+            routeName: "AddCat",
+            params: {
+              selectedCat: selectedCat
+            }
+          });
+        }}
+      >
+        <Feather name="edit-2" size={24} style={{ marginRight: 15 }} />
+      </TouchableOpacity>
+      <TouchableOpacity
+        onPress={() => {
+          const { id, deleteCat } = props.navigation.state.params;
+          props.navigation.navigate({
+            routeName: "CatsList"
+          });
+          deleteCat(id);
+        }}
+      >
+        <Feather name="trash-2" size={24} style={{ marginRight: 15 }} />
+      </TouchableOpacity>
+    </>
+  )
+});
 
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
     alignItems: "center",
-    padding: 15
+    padding: 15,
+    paddingTop: 25
   },
   image: {
-    height: 200,
-    width: 200,
-    backgroundColor: "#ccc",
+    height: 160,
+    width: 160,
+    backgroundColor: "#fff",
     borderColor: "black",
     borderWidth: 3,
-    borderRadius: 100,
-    overflow: "hidden"
+    borderRadius: 80,
+    overflow: "hidden",
+    justifyContent: "center",
+    alignItems: "center"
   },
   header: {
     marginLeft: 15,
-    marginVertical: 15,
+    // marginVertical: 15,
+    marginTop: 15,
+    marginBottom: 10,
     width: "100%",
     justifyContent: "flex-start"
   },
@@ -99,6 +129,7 @@ const styles = StyleSheet.create({
     color: "grey"
   },
   tileContainer: {
+    height: "55%",
     width: "100%",
     flexDirection: "row",
     flexWrap: "wrap",
@@ -110,4 +141,8 @@ const mapStateToProps = state => ({
   cats: state.cats
 });
 
-export default connect(mapStateToProps)(InformationsScreen);
+const mapDispatchToProps = dispatch => ({
+  deleteCat: id => dispatch(deleteCat(id))
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(InformationsScreen);

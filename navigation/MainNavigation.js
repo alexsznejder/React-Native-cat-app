@@ -7,41 +7,60 @@ import { AntDesign, MaterialCommunityIcons } from "@expo/vector-icons";
 import CatsScreen from "../screens/CatsScreen";
 import CalendarScreen from "../screens/CalendarScreen";
 import InformationsScreen from "../screens/InformationsScreen";
-import LastActivitiesScreen from "../screens/LastActivitiesScreen";
 import SensorsScreen from "../screens/SensorsScreen";
 import ShoppingListScreen from "../screens/ShoppingListScreen";
+import AddCatScreen from "../screens/AddCatScreen";
+import AddEventScreen from "../screens/AddEventScreen";
+
+const InformationsStack = createStackNavigator({
+  InformationsStackScreen: InformationsScreen
+});
+
+const CalendarStack = createStackNavigator({
+  CalendarStackScreen: CalendarScreen,
+  AddEvent: AddEventScreen
+});
+const ShoppingStack = createStackNavigator({
+  ShoppingStackScreen: ShoppingListScreen
+});
+
+const SensorsStack = createStackNavigator({
+  SensorsStackScreen: SensorsScreen
+});
 
 const TabsNavigation = createMaterialBottomTabNavigator(
   {
     Informations: {
-      screen: InformationsScreen,
+      screen: InformationsStack,
       navigationOptions: {
-        tabBarIcon: tabInfo => {
-          return <MaterialCommunityIcons name="paw" size={25} color="white" />;
+        tabBarIcon: ({ tintColor }) => {
+          return (
+            <MaterialCommunityIcons name="paw" size={25} color={tintColor} />
+          );
         }
       }
     },
     Calendar: {
-      screen: CalendarScreen,
+      screen: CalendarStack,
       navigationOptions: {
-        tabBarIcon: tabInfo => {
-          return <AntDesign name="calendar" size={25} color="white" />;
+        tabBarIcon: ({ tintColor }) => {
+          return <AntDesign name="calendar" size={25} color={tintColor} />;
         }
       }
     },
     Shopping: {
-      screen: ShoppingListScreen,
+      screen: ShoppingStack,
       navigationOptions: {
-        tabBarIcon: tabInfo => {
-          return <AntDesign name="shoppingcart" size={25} color="white" />;
+        tabBarIcon: ({ tintColor }) => {
+          return <AntDesign name="shoppingcart" size={25} color={tintColor} />;
         }
       }
     },
     Sensors: {
-      screen: SensorsScreen,
+      screen: SensorsStack,
       navigationOptions: {
-        tabBarIcon: tabInfo => {
-          return <AntDesign name="API" size={25} color="white" />;
+        tabBarIcon: ({ tintColor }) => {
+          return <AntDesign name="API" size={25} color={tintColor} />;
         }
       }
     }
@@ -49,19 +68,31 @@ const TabsNavigation = createMaterialBottomTabNavigator(
   {
     initialRouteName: "Informations",
     labeled: false,
-    shifting: true,
-    activeColor: "black",
-    inactiveColor: "white"
+    shifting: false,
+    activeColor: "white"
   }
+);
+
+const CatListStackNavigator = createStackNavigator(
+  {
+    CatsList: {
+      screen: CatsScreen,
+      navigationOptions: {
+        header: null
+      }
+    },
+    AddCat: AddCatScreen
+  },
+  { initialRouteName: "CatsList" }
 );
 
 const MainNavigator = createStackNavigator(
   {
-    CatsList: CatsScreen,
+    CatsListNav: CatListStackNavigator,
     Cat: TabsNavigation
   },
   {
-    defaultNavigationOptions: {}
+    defaultNavigationOptions: { header: null }
   }
 );
 

@@ -21,7 +21,12 @@ export const fetchProducts = () => {
 
       for (const key in resData) {
         loadedProducts.push(
-          new Product(key, resData[key].catId, resData[key].name)
+          new Product(
+            key,
+            resData[key].catId,
+            resData[key].name,
+            resData[key].active
+          )
         );
       }
 

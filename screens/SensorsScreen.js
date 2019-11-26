@@ -1,14 +1,20 @@
-import React from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { View, Text, StyleSheet, ScrollView } from "react-native";
-import { SENSORS } from "../data/dummy-data";
-import Sensor from "../components/Sensor";
+import BackArrow from "../components/BackArrow";
+import { getSensorsData } from "../api/sensors";
+import SensorsList from "../components/SensorsList";
 
 const SensorsScreen = () => {
-  const sensorsList = SENSORS.map(sen => (
-    <Sensor key={sen.id.toString()} sensor={sen}>
-      <Text style={styles.sensorValue}>Dirty</Text>
-    </Sensor>
-  ));
+  const [sensorsData, setSensorData] = useState([]);
+
+  const loadSensorsData = useCallback(async () => {
+    const response = await getSensorsData();
+    setSensorData(response);
+  }, []);
+
+  useEffect(() => {
+    loadSensorsData();
+  }, [loadSensorsData]);
 
   return (
     <View style={styles.screen}>
@@ -16,16 +22,21 @@ const SensorsScreen = () => {
         style={styles.list}
         contentContainerStyle={{ alignItems: "center" }}
       >
-        {sensorsList}
+        <SensorsList sensors={sensorsData} />
       </ScrollView>
     </View>
   );
 };
 
+SensorsScreen.navigationOptions = props => ({
+  headerLeft: <BackArrow navigation={props.navigation} />
+});
+
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    padding: 15
+    paddingTop: 15,
+    paddingHorizontal: 15
   },
   list: {
     width: "100%"

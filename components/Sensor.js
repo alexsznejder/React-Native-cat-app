@@ -6,7 +6,7 @@ const Sensor = props => {
   const { sensor } = props;
   return (
     <View style={styles.sensorContainer}>
-      <View style={styles.activeStatus}>
+      {/* <View style={styles.activeStatus}>
         <View
           style={
             sensor.active
@@ -15,10 +15,19 @@ const Sensor = props => {
           }
         ></View>
         <Text>{sensor.active ? "ACTIVE" : "INACTIVE"}</Text>
-      </View>
+      </View> */}
       <View style={styles.theRest}>
-        <Text style={styles.name}>{props.sensor.name}</Text>
-        <View style={styles.valueContainer}>{props.children}</View>
+        <Text style={styles.name}>
+          {String(sensor.name)
+            .charAt(0)
+            .toUpperCase() +
+            String(sensor.name)
+              .slice(1)
+              .toLowerCase()}
+        </Text>
+        <View style={styles.valueContainer}>
+          <Text>{sensor.value}</Text>
+        </View>
         <View style={styles.resetButton}>
           <MainButton>
             <Text>reset</Text>
@@ -36,7 +45,8 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     elevation: 5,
     backgroundColor: "white",
-    marginVertical: 5,
+    marginTop: 5,
+    marginBottom: 15,
     padding: 10
   },
   activeStatus: {

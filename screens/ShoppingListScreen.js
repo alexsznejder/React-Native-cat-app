@@ -10,6 +10,7 @@ import {
   toggleActive,
   deleteProduct
 } from "../store/actions/products";
+import BackArrow from "../components/BackArrow";
 
 const ShoppingListScreen = props => {
   const [isLoading, setIsLoading] = useState(false);
@@ -86,6 +87,9 @@ const ShoppingListScreen = props => {
     </View>
   );
 };
+ShoppingListScreen.navigationOptions = props => ({
+  headerLeft: <BackArrow navigation={props.navigation} />
+});
 
 const styles = StyleSheet.create({
   screen: {
@@ -123,7 +127,4 @@ const mapDispatchToProps = dispatch => ({
   deleteProduct: proId => dispatch(deleteProduct(proId))
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(ShoppingListScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(ShoppingListScreen);

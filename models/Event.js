@@ -1,6 +1,7 @@
 class Event {
-  constructor(id, date, title, allDay, time, localization, description) {
+  constructor(id, catId, date, title, allDay, time, localization, description) {
     (this.id = id),
+      (this.catId = catId),
       (this.date = date),
       (this.title = title),
       (this.allDay = allDay),

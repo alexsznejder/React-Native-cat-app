@@ -1,26 +1,36 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useEffect, useCallback } from "react";
 import { View, StyleSheet, ScrollView, ToastAndroid, Text } from "react-native";
 import { Calendar } from "react-native-calendars";
 import { connect } from "react-redux";
-import { addSelectedDate, addEvent, fetchEvents } from "../store/actions/dates";
+import { addSelectedDate, fetchEvents } from "../store/actions/dates";
 import FloatingButton from "../components/FloatingButton";
 import EventModal from "../components/EventModal";
 import EventsListItem from "../components/EventsListItem";
+import BackArrow from "../components/BackArrow";
 
-const CalendarScreen = props => {
-  const [modalVisible, setModalVisible] = useState(false);
-
-  const selectedEvents = props.dates.selectedDayEvents.map(event => (
-    <EventsListItem
-      key={event.id}
-      time={event.time}
-      title={event.title}
-      selectedDay={props.dates.selectedDay}
-    />
-  ));
+const CalendarScreen = ({
+  dates,
+  fetchEvents,
+  addSelectedDate,
+  navigation,
+  cats
+}) => {
+  const selectedEvents = dates.selectedDayEvents
+    .filter(event => event.catId == cats.selectedCatId)
+    .map(event => (
+      <EventsListItem
+        key={event.id}
+        event={event}
+        time={event.time}
+        title={event.title}
+        selectedDay={dates.selectedDay}
+        navigation={navigation}
+      />
+    ));
 
   const loadEvents = useCallback(async () => {
-    await props.fetchEvents();
+    await fetchEvents();
+    // setSelectedEventId(undefined);
   }, []);
 
   useEffect(() => {
@@ -30,11 +40,11 @@ const CalendarScreen = props => {
   return (
     <View style={styles.screen}>
       <Calendar
-        current={props.dates.selectedDay}
-        markedDates={props.dates.markedDates}
+        current={dates.selectedDay}
+        markedDates={dates.markedDates}
         firstDay={1}
         onDayPress={day => {
-          props.addSelectedDate(day.dateString);
+          addSelectedDate(day.dateString);
         }}
         theme={{
           selectedDayBackgroundColor: "pink"
@@ -46,33 +56,20 @@ const CalendarScreen = props => {
       </ScrollView>
       <FloatingButton
         onPress={() => {
-          if (props.dates.selectedDay == "") {
+          if (dates.selectedDay == "") {
             ToastAndroid.show("First select a day!", ToastAndroid.SHORT);
           } else {
-            setModalVisible(true);
+            navigation.navigate("AddEvent");
           }
-        }}
-      />
-
-      <EventModal
-        selectedDay={props.dates.selectedDay}
-        modalVis={modalVisible}
-        handleCancelPress={() => setModalVisible(false)}
-        handleSavePress={(title, allDay, time, localization, description) => {
-          props.addEvent(
-            props.dates.selectedDay,
-            title,
-            allDay,
-            time,
-            localization,
-            description
-          );
-          setModalVisible(false);
         }}
       />
     </View>
   );
 };
+
+CalendarScreen.navigationOptions = props => ({
+  headerLeft: <BackArrow navigation={props.navigation} />
+});
 
 const styles = StyleSheet.create({
   screen: {
@@ -90,17 +87,13 @@ const styles = StyleSheet.create({
 });
 
 const mapStateToProps = state => ({
-  dates: state.dates
+  dates: state.dates,
+  cats: state.cats
 });
 
 const mapDispatchToProps = dispatch => ({
   addSelectedDate: dateString => dispatch(addSelectedDate(dateString)),
-  addEvent: (date, title, allDay, time, localization, description) =>
-    dispatch(addEvent(date, title, allDay, time, localization, description)),
   fetchEvents: () => dispatch(fetchEvents())
 });
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CalendarScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(CalendarScreen);

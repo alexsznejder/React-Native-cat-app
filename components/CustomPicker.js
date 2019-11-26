@@ -10,7 +10,8 @@ const CustomePicker = props => {
     <Picker
       selectedValue={props.pickerValue}
       style={styles.picker}
-      onValueChange={(itemValue, itemIndex) => props.setValue(itemValue)}
+      onValueChange={itemValue => props.setValue(itemValue)}
+      itemStyle={styles.textStyle}
     >
       {pickerItems}
     </Picker>
@@ -19,8 +20,14 @@ const CustomePicker = props => {
 
 const styles = StyleSheet.create({
   picker: {
-    width: "90%",
+    width: "85%",
     marginVertical: 5
+  },
+  textStyle: {
+    color: "black",
+    fontSize: 18,
+    fontWeight: "bold",
+    backgroundColor: "red"
   }
 });
 
